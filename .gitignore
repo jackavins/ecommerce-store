@@ -2,7 +2,7 @@
 node_modules
 
 # Ignore built TypeScript output
-build/
+dist
 
 # Ignore editor and IDE files
 .idea/
