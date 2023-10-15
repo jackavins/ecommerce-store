@@ -1,0 +1,15 @@
+# Ignore node_modules directory
+node_modules
+
+# Ignore built TypeScript output
+build/
+
+# Ignore editor and IDE files
+.idea/
+
+# Ignore local environment files
+.env.prod
+
+# Ignore logs and temporary files
+logs/
+*.log
