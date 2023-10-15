@@ -1,44 +1,23 @@
 import { Router } from "express";
-import { body, validationResult } from "express-validator";
-import products from "../assets/products.json";
 import { CustomError } from "../errors/customError";
 import store from "../services/store";
 import adminRouter from "./admin";
+import cartRouter from "./cart";
 
 const router = Router();
 
-router.use((req, res, next) => {
-	console.log(store.getUser(req.session.uniqueID));
-	next();
-});
-
 router.use("/admin", adminRouter);
+router.use("/cart", cartRouter);
 
-router.get("/products", (req, res) => res.json(products));
+router.get("/products", (req, res) => res.json(store.products));
 
-router.get("/cart", (req, res) => {
+// this route return the discount that can be applied for particular user
+router.get("/discount", (req, res) => {
 	const userStore = store.getUser(req.session.uniqueID);
-	return res.json(userStore.cart.get());
+	return res.json(store.getApplicableDiscountByUser(userStore));
 });
 
-router.post("/cart", body("productId").notEmpty().withMessage("`productId` key is required"), (req, res) => {
-	const errors = validationResult(req);
-
-	if (!errors.isEmpty()) return res.status(400).json({ message: "Validation failed", errors: errors.array() });
-
-	const { productId } = req.body;
-	const userStore = store.getUser(req.session.uniqueID);
-
-	try {
-		userStore.cart.add(productId);
-		return res.json(userStore.cart.get());
-	} catch (error) {
-		if (error instanceof CustomError) return res.status(error.statusCode).json({ message: error.message });
-
-		return res.status(500).json({ error: "Internal Server Error" });
-	}
-});
-
+// this route checkout the products added to the cart
 router.post("/checkout", (req, res) => {
 	const userStore = store.getUser(req.session.uniqueID);
 
