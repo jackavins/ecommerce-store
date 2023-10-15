@@ -14,7 +14,6 @@ class Store {
 		this.users = {};
 		this.discounts = new Discounts();
 		this.products = new Products();
-		["10OFF", "20OFF", "30OFF"].forEach((code) => this.discounts.add(code));
 		this.totalOrderPlaced = 0;
 		this.totalPurchasedAmount = 0;
 		this.totalDiscountAmount = 0;
